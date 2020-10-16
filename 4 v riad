@@ -1,6 +1,8 @@
-#include "pch.h"
-#include <iostream>
-#include <string>
+ #include "pch.h"
+ #include <iostream>
+ #include <string>
+
+
 
 using namespace std;
 
@@ -10,15 +12,11 @@ enum Cell {
 	YELLOW
 };
 
-const int di[] = { 1, 0, 1, 1 }; // с помощью этого массива двигаемся по строке 
-const int dj[] = { 0, 1, -1, 1 }; // с помощью этого - по столбцам
-// к примеру 1, 0 позволяет пройти по горизонтали
-// 0, 1 позволяет идти по вертикали
-// 1, -1 позволяет идти по обратной диагонали
-// 1, 1 позволяет идти по обычной диагонали
+const int di[] = { 1, 0, 1, 1 }; // движение по строке 
+const int dj[] = { 0, 1, -1, 1 }; // движение по столбцам
+
 
 class Field {
-
 private:
 	int FIELD_WIDTH = 6;
 	int FIELD_HEIGHT = 7;
@@ -27,7 +25,6 @@ private:
 	Cell winner; // кто победитель
 	const int DIR_NUMBER = 4;
 	const int WIN_LENGTH = 4;
-
 public:
 	//Field(bool isRedFirst); // constructor done
 	//void clear(bool isRedFirst); // функция очистки поля после законченной игры done
@@ -42,8 +39,7 @@ public:
 	Field(bool isRedFirst) {
 		clear(isRedFirst);
 	}
-
-	void clear(bool isRedFirst) // очистка поля, сразу же задаем очередность 
+	void clear(bool isRedFirst) // Чистка поля, сразу же задаем очередность 
 	{
 		isRedTurn = isRedFirst;
 		winner = EMPTY;
@@ -51,7 +47,6 @@ public:
 			for (int j = 0; j < FIELD_HEIGHT; j++)
 				cells[i][j] = EMPTY;
 	}
-
 	void checkWinner() // проверка на победителя
 	{
 		for (int i = 0; i < FIELD_WIDTH; i++)
@@ -67,11 +62,11 @@ public:
 						iline += di[dir];
 						jline += dj[dir];
 						if (iline < 0 || iline >= FIELD_WIDTH ||
-							jline < 0 || jline >= FIELD_HEIGHT) // предотвращение выхода за пределы поля
+							jline < 0 || jline >= FIELD_HEIGHT) // запрет выхода за пределы поля
 							break;
 						if (getCell(iline, jline) != start) break; // если следующая ячейка не равна стартовой - нет смысла проверять дальше
 					}
-					if (length == WIN_LENGTH) // если есть 4 в ряд, то объявляем виннера через ячейку
+					if (length == WIN_LENGTH) // если есть 4 в ряд, то объявляем победителя через ячейку
 					{
 						winner = start;
 						return;
@@ -79,22 +74,17 @@ public:
 				}
 			}
 	}
-
 	bool isOver() const
 	{
 		if (winner != EMPTY)
 			return true;
 		for (int i = 0; i < FIELD_WIDTH; i++)
-			for (int j = 0; j < FIELD_HEIGHT; j++)
-				// Если хоть одна ячейка свободна,
-				// игра не окончена
+			for (int j = 0; j < FIELD_HEIGHT; j++) // Если хоть одна ячейка свободна // игра не окончена
 				if (getCell(i, j) == EMPTY)
-					return false;
-		// Все ячейки заняты
+					return false; // Все ячейки заняты
 		return true;
 	}
-
-	// has to be done
+	
 	bool isWon(bool red) const {
 		Cell cell;
 		if (red) {
@@ -149,7 +139,7 @@ public:
 	}
 	//
 
-	bool makeTurn(int column) //  функция хода
+	bool makeTurn(int column) // функция хода
 	{
 		if (winner != EMPTY || column < 1 || column > FIELD_WIDTH)
 			return false;
@@ -158,7 +148,7 @@ public:
 			if (getCell(i, j) == EMPTY)
 			{
 				cells[i][j] = isRedTurn ? RED : YELLOW;
-				checkWinner(); // проверка победы?
+				checkWinner(); // проверка на победу.
 				isRedTurn = !isRedTurn;
 				return true;
 			}
@@ -175,7 +165,7 @@ int main()
 		while (!field.isOver())
 		{
 			field.print();
-			cout << "Now it's " << (field.isRedTurnNow() ? "red player" : "yellow player") << " turn!" << " Player, make a move (1-7)!" << endl;
+			cout << "Now it's " << (field.isRedTurnNow() ? "red player" : "yellow player") << " turn!" << " Player, make a move from 1 to 7!" << endl;
 			int column; cin >> column;
 			field.makeTurn(column);
 		}
